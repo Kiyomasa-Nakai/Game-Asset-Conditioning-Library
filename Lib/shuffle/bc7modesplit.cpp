@@ -12,6 +12,9 @@
 #include "../BCnBlockDefs.h"
 #include "bc7.h"
 
+#include <intrin.h>
+#include <immintrin.h>
+
 #include <windows.h>
 
 #include <algorithm>
@@ -1351,7 +1354,7 @@ void GetBC_ModeSplit_CopyBitsOrderMode4(CopyBitsSequence& sequence, BC7ModeSplit
         // 7   0  1  2  3  4  0  1  2- 3  4  0  1  2  3  4  0- 1  2  3  4  0  1  2  3- 4  0  1  2  3  4  0  1- 2  3  4  *  *  *  *  *        1                                    5
         // 8   0  1  2  3  4  5  6  0- 1  2  3  4  5  6  0  1- 2  3  4  5  6  0  1  2- 3  4  5  6  0  1  2  3- 4  5  6  0  1  2  3  4        0  
 
-        CopyBitsOrder ops[60] = {
+        static CopyBitsOrder ops[60] = {
             {   //  Mode (10000)
                CopyBitDestination::Mode,
                0,
@@ -1647,7 +1650,7 @@ void GetBC_ModeSplit_CopyBitsOrderMode5(CopyBitsSequence& sequence, BC7ModeSplit
         // 8   0  1  2  3  4  5  6  0- 1  2  3  4  5  6  0  1- 2  3  4  5  6  0  1  2- 3  4  5  6  0  1  2  3- 4  5  6  0  1  2  3  4_ 5  6  0  1  2  3  4  5- 6  0  1  2  3  4  5  6        0  
 
 
-        CopyBitsOrder ops[70] = {
+        static CopyBitsOrder ops[70] = {
              {   //  Mode (100000)
                 CopyBitDestination::Mode,
                 0,
@@ -1930,7 +1933,7 @@ void GetBC_ModeSplit_CopyBitsOrderMode6(CopyBitsSequence& sequence, BC7ModeSplit
         // 8   0  1  2  3  4  5  6  0- 1  2  3  4  5  6  0  1- 2  3  4  5  6  0  1  2- 3  4  5  6  0  1  2  3- 4  5  6  0  1  2  3  4_ 5  6  0  1  2  3  4  5- 6  0  1  2  3  4  5  6        0  
 
 
-        CopyBitsOrder ops[70] = {
+        static CopyBitsOrder ops[70] = {
              {   //  Mode (1000000)
                 CopyBitDestination::Mode,
                 0,
@@ -3284,55 +3287,73 @@ void BC7_ModeSplit_RotateColors(const uint8_t* src, size_t srcSize, std::vector<
         {
             switch (mode) {
             case 0:
+            {
                 BC7m0 b0 = *reinterpret_cast<const BC7m0*>(src);
                 b0.ApplyRotation(endpointCounts[r].M[mode].Rotation.E);
                 *reinterpret_cast<BC7m0*>(pDest) = b0;
                 break;
+            }
 
             case 1:
+            {
                 BC7m1 b1 = *reinterpret_cast<const BC7m1*>(src);
                 b1.ApplyRotation(endpointCounts[r].M[mode].Rotation.E);
                 *reinterpret_cast<BC7m1*>(pDest) = b1;
                 break;
+            }
 
             case 2:
+            {
                 BC7m2 b2 = *reinterpret_cast<const BC7m2*>(src);
                 b2.ApplyRotation(endpointCounts[r].M[mode].Rotation.E);
                 *reinterpret_cast<BC7m2*>(pDest) = b2;
                 break;
+            }
 
             case 3:
+            {
                 BC7m3 b3 = *reinterpret_cast<const BC7m3*>(src);
                 b3.ApplyRotation(endpointCounts[r].M[mode].Rotation.E);
                 *reinterpret_cast<BC7m3*>(pDest) = b3;
                 break;
+            }
 
             case 4:
+            {
                 BC7m4_Derotated b4 = *reinterpret_cast<const BC7m4_Derotated*>(src);
                 b4.ApplyRotation(endpointCounts[r].M[mode].Rotation.E);
                 *reinterpret_cast<BC7m4_Derotated*>(pDest) = b4;
                 break;
+            }
 
             case 5:
+            {
                 BC7m5_Derotated b5 = *reinterpret_cast<const BC7m5_Derotated*>(src);
                 b5.ApplyRotation(endpointCounts[r].M[mode].Rotation.E);
                 *reinterpret_cast<BC7m5_Derotated*>(pDest) = b5;
                 break;
+            }
 
             case 6:
+            {
                 BC7m6 b6 = *reinterpret_cast<const BC7m6*>(src);
                 b6.ApplyRotation(endpointCounts[r].M[mode].Rotation.E);
                 *reinterpret_cast<BC7m6*>(pDest) = b6;
                 break;
+            }
 
             case 7:
+            {
                 BC7m7 b7 = *reinterpret_cast<const BC7m7*>(src);
                 b7.ApplyRotation(endpointCounts[r].M[mode].Rotation.E);
                 *reinterpret_cast<BC7m7*>(pDest) = b7;
                 break;
+            }
 
             default:
+            {
                 assert(false);
+            }
             }
         }
         else
@@ -4107,7 +4128,6 @@ void BC7_ModeSplit_Transform(const uint8_t* src, size_t srcSize, std::vector<uin
     uint8_t encodingBitsB = ModeTransformBCountToModeBits[modesUsed];
     uint8_t modeToEncoding[9] = {};
     uint8_t modesOrderedByCount[9] = {};
-    CopyBitsSequence bitSequences[9];
     {
         size_t modeCountCopy[9] = {};
         memcpy(modeCountCopy, modeCounts, sizeof(modeCounts));
@@ -4126,7 +4146,6 @@ void BC7_ModeSplit_Transform(const uint8_t* src, size_t srcSize, std::vector<uin
             modeToEncoding[mostFrequentMode] = lutEntry;
             modesOrderedByCount[lutEntry] = mostFrequentMode;
             modeCountCopy[mostFrequentMode] = 0;
-            BC7_ModeSplit_Shuffle_OpLists[mostFrequentMode](bitSequences[mostFrequentMode], opt, metrics);
         }
     }
 
@@ -4241,7 +4260,9 @@ void BC7_ModeSplit_Transform(const uint8_t* src, size_t srcSize, std::vector<uin
 
         if (mode < 8 || !mode8Clean)
         {
-            BC7_ModeSplit_Shuffle_Slow((uint8_t)mode, nextStageSrc, b, bitSequences[mode]);
+            CopyBitsSequence sequence;
+            BC7_ModeSplit_Shuffle_OpLists[mode](sequence, opt, metrics);
+            BC7_ModeSplit_Shuffle_Slow((uint8_t)mode, nextStageSrc, b, sequence);
 
             // add endpoint order bits to scraps (when we grow the buffers we always ensure there's at least 4 bits of extra space, no resize needed here)
             if ((endpointOrderModeMask & (1 << mode)) != 0 && opt.EndpointOrderStrategy)
@@ -4880,6 +4901,7 @@ void BC7_ModeSplit_Reverse(const uint8_t* src, size_t srcSize, std::vector<uint8
                     switch (mode)
                     {
                     case 0:
+                    {
                         BC7m0 b0 = *reinterpret_cast<BC7m0*>(de);
                         if (epRules[eob] & 0x1)
                         {
@@ -4926,8 +4948,10 @@ void BC7_ModeSplit_Reverse(const uint8_t* src, size_t srcSize, std::vector<uint8
                         }
                         *reinterpret_cast<BC7m0*>(de) = b0;
                         break;
+                    }
 
                     case 1:
+                    {
                         BC7m1 b1 = *reinterpret_cast<BC7m1*>(de);
                         if (epRules[eob] & 0x1)
                         {
@@ -4962,8 +4986,10 @@ void BC7_ModeSplit_Reverse(const uint8_t* src, size_t srcSize, std::vector<uint8
                         }
                         *reinterpret_cast<BC7m1*>(de) = b1;
                         break;
+                    }
 
                     case 2:
+                    {
                         BC7m2 b2 = *reinterpret_cast<BC7m2*>(de);
                         if (epRules[eob] & 0x1)
                         {
@@ -5009,8 +5035,10 @@ void BC7_ModeSplit_Reverse(const uint8_t* src, size_t srcSize, std::vector<uint8
                         }
                         *reinterpret_cast<BC7m2*>(de) = b2;
                         break;
+                    }
 
                     case 3:
+                    {
                         BC7m3 b3 = *reinterpret_cast<BC7m3*>(de);
                         if (epRules[eob] & 0x1)
                         {
@@ -5045,8 +5073,10 @@ void BC7_ModeSplit_Reverse(const uint8_t* src, size_t srcSize, std::vector<uint8
                         }
                         *reinterpret_cast<BC7m3*>(de) = b3;
                         break;
+                    }
 
                     case 4:
+                    {
                         BC7m4_Derotated b4 = *reinterpret_cast<BC7m4_Derotated*>(de);
                         if (epRules[eob] & 0x1)
                         {
@@ -5074,8 +5104,10 @@ void BC7_ModeSplit_Reverse(const uint8_t* src, size_t srcSize, std::vector<uint8
                         }
                         *reinterpret_cast<BC7m4_Derotated*>(de) = b4;
                         break;
+                    }
 
                     case 5:
+                    {
                         BC7m5_Derotated b5 = *reinterpret_cast<BC7m5_Derotated*>(de);
                         if (epRules[eob] & 0x1)
                         {
@@ -5104,8 +5136,10 @@ void BC7_ModeSplit_Reverse(const uint8_t* src, size_t srcSize, std::vector<uint8
                         }
                         *reinterpret_cast<BC7m5_Derotated*>(de) = b5;
                         break;
+                    }
 
                     case 6:
+                    {
                         BC7m6 b6 = *reinterpret_cast<BC7m6*>(de);
                         if (epRules[eob] & 0x1)
                         {
@@ -5133,8 +5167,10 @@ void BC7_ModeSplit_Reverse(const uint8_t* src, size_t srcSize, std::vector<uint8
                         }
                         *reinterpret_cast<BC7m6*>(de) = b6;
                         break;
+                    }
 
                     case 7:
+                    {
                         BC7m7 b7 = *reinterpret_cast<BC7m7*>(de);
                         if (epRules[eob] & 0x1)
                         {
@@ -5178,6 +5214,7 @@ void BC7_ModeSplit_Reverse(const uint8_t* src, size_t srcSize, std::vector<uint8
                         }
                         *reinterpret_cast<BC7m7*>(de) = b7;
                         break;
+                    }
                     }
                 }
             }
