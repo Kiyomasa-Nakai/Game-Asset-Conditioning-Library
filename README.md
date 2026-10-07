@@ -87,6 +87,18 @@ Before building in Visual Studio, restore dependencies through vcpkg. The reposi
 vcpkg through [Directory.Build.Props](Directory.Build.Props), so clone-and-build does not require
 git submodule initialization.
 
+The default package source is nuget.org. If direct access to nuget.org is restricted, set
+`GACL_NUGET_SOURCE` to an approved NuGet v3 service index before restoring or building. The same
+setting is used by the MSBuild package restore and the vcpkg overlay ports:
+
+```powershell
+$env:GACL_NUGET_SOURCE = "https://<approved-nuget-v3-service-index>"
+.\Tools\scripts\restorePackages.ps1
+```
+
+The configured feed must mirror the NuGet packages used by the solution and overlay ports. Leave
+`GACL_NUGET_SOURCE` unset to use the public NuGet service.
+
 Primary build solution can be found at:
 
 `<root>\gacl.sln`

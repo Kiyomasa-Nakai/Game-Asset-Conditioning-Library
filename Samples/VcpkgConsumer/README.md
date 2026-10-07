@@ -35,6 +35,9 @@ $overlays  = "..\..\build\overlays"
 $triplets  = "..\..\build\triplets"
 $installed = "$PWD\vcpkg_installed"   # parent directory (do not append triplet)
 
+# Optional: use an approved NuGet v3 mirror when direct nuget.org access is restricted.
+# $env:GACL_NUGET_SOURCE = "https://<approved-nuget-v3-service-index>"
+
 # Pick the toolset you are building with. The generator and the triplet must
 # agree: the triplet is what pins vcpkg's dependencies to the same toolset.
 $toolset   = "v143"                       # or "v145"

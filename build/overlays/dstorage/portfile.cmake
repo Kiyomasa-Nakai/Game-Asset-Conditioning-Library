@@ -1,5 +1,7 @@
 # This port overlay is set to a preview instead of the last release build.
 
+include("${CMAKE_CURRENT_LIST_DIR}/../cmake/gacl-nuget.cmake")
+
 # Set VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY instead of using `vcpkg_check_linkage` because
 # these DLLs don't link with a CRT.
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
@@ -9,9 +11,14 @@ set(PREVIEW "-preview1-2603.504")
 
 set(_SHA512 2ab4f0f2f6ebe41f8102b60d02c6db655b62e51dd0b1bf5d4a7d1cbfc0069b06541beb721adf0d98a0384c41456e7cd284716baf358c84589258770bf674fb0e)
 set(_FILENAME "directstorage.${VERSION}${PREVIEW}.zip")
+gacl_get_nuget_package_url(
+    _PACKAGE_URL
+    "Microsoft.Direct3D.DirectStorage"
+    "${VERSION}${PREVIEW}"
+)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.nuget.org/api/v2/package/Microsoft.Direct3D.DirectStorage/${VERSION}${PREVIEW}"
+    URLS "${_PACKAGE_URL}"
     FILENAME "${_FILENAME}"
     SHA512 ${_SHA512}
 )

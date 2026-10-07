@@ -8,6 +8,8 @@
 #   nuget.org (SHA512-pinned).
 #   Opt out: manifest "default-features": false  (classic: microsoft-gacl[core])
 
+include("${CMAKE_CURRENT_LIST_DIR}/../cmake/gacl-nuget.cmake")
+
 get_filename_component(SOURCE_PATH "${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
 
 # ---------------------------------------------------------------------------
@@ -18,9 +20,14 @@ if("cler" IN_LIST FEATURES)
     set(_ORT_PKG_LOWER   "microsoft.ml.onnxruntime")
     set(_ORT_FILENAME    "${_ORT_PKG_LOWER}.${_ORT_VERSION}.nupkg")
     set(_ORT_SHA512      "76b67c8dafc23c4f20ad09637057c2021f4a873701826cec9e274a04a2017ad11433879275a091f9a1d5997a9aea7fbb7589b49d036028b193b6168f99d9f460")
+    gacl_get_nuget_package_url(
+        _ORT_PACKAGE_URL
+        "Microsoft.ML.OnnxRuntime"
+        "${_ORT_VERSION}"
+    )
 
     vcpkg_download_distfile(ORT_ARCHIVE
-        URLS     "https://www.nuget.org/api/v2/package/Microsoft.ML.OnnxRuntime/${_ORT_VERSION}"
+        URLS     "${_ORT_PACKAGE_URL}"
         FILENAME "${_ORT_FILENAME}"
         SHA512   ${_ORT_SHA512}
     )

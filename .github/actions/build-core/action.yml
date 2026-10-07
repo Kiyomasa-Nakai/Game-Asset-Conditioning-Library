@@ -26,10 +26,7 @@ runs:
     - name: Restore NuGet packages
       shell: pwsh
       run: |
-        nuget restore gacl.sln `
-          -ConfigFile nuget.config `
-          -PackagesDirectory packages `
-          -Source "https://api.nuget.org/v3/index.json"
+        Tools\scripts\restorePackages.ps1
 
     - name: Setup CLER
       shell: pwsh
