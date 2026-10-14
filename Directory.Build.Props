@@ -46,6 +46,7 @@
          in vcpkg_installed\.  The overlay-triplets option must be passed on every
          vcpkg invocation, CI or not. -->
     <VcpkgAdditionalInstallOptions>$(VcpkgAdditionalInstallOptions) "--overlay-triplets=$(MSBuildThisFileDirectory)build\triplets"</VcpkgAdditionalInstallOptions>
+    <VcpkgAdditionalInstallOptions Condition="'$(GaclVcpkgBuildtreesRoot)' != ''">$(VcpkgAdditionalInstallOptions) "--x-buildtrees-root=$(GaclVcpkgBuildtreesRoot)"</VcpkgAdditionalInstallOptions>
   </PropertyGroup>
 
   <Import Condition="Exists('$(VcpkgRoot)scripts\buildsystems\msbuild\vcpkg.props')"

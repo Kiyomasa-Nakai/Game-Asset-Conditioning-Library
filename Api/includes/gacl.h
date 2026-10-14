@@ -129,10 +129,10 @@
 
 #define GACL_ZSTD_TARGET_COMPRESSED_BLOCK_SIZE					(8*1024)
 
-// Maximum zstd window GACL will configure, as a windowLog (1 << 18 == 256KB).  GACL's hardware
-// decompression path is provisioned for a 256KB window; a larger one costs roughly 100x in
-// decompression time.  This is an upper bound, not an exact size - see
-// GACL_Compression_CompressBuffer() in shuffle.h.
+// Maximum zstd window GACL will configure, as a windowLog (1 << 18 == 256KB).
+// Anticipated CPU-offload implementations may have this as a performance boundary,
+// with long fetches (>256KB) having a much higher cost. This is an upper bound, not
+// an exact size - see GACL_Compression_CompressBuffer() in shuffle.h.
 #define GACL_ZSTD_MAX_WINDOW_LOG								(18)
 
 #ifndef GACL_INCLUDE_BLER

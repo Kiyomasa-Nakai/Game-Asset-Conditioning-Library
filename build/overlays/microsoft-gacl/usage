@@ -58,11 +58,9 @@ PyTorch. No GPU is required - the export runs on CPU.
 
 Compressing NON-TEXTURE data (important):
 
-    GACL's hardware-accelerated decompression path requires a zstd window of
-    at most 256 KB (windowLog 18). Data compressed with a larger window still
-    decompresses correctly, but falls off the hardware path and decodes
-    roughly 100x slower. It is a performance cliff, not a corruption bug -
-    nothing fails loudly if you get it wrong.
+    Anticipated future CPU-offload implementations of zstd decompression may
+    require a window of at most 256 KB (windowLog 18). GACL caps the window
+    accordingly.
 
     If you compress with stock zstd.exe instead of using the GACL APIs or
     front end tool, set the window explicitly:

@@ -13,7 +13,7 @@ runs:
     - name: Setup MSBuild (VS 2022)
       uses: microsoft/setup-msbuild@v2
       with:
-        vs-version: '17.0'
+        vs-version: '[17.0,18.0)'
 
     - name: Cache vcpkg packages
       uses: actions/cache@v4

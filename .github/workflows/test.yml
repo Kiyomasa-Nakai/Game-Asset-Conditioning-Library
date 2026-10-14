@@ -17,6 +17,8 @@ jobs:
     permissions:
       checks: write
       contents: read
+    env:
+      GaclVcpkgBuildtreesRoot: ${{ runner.temp }}\gacl-vcpkg-buildtrees
 
     strategy:
       fail-fast: false

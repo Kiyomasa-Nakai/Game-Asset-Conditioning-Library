@@ -187,8 +187,8 @@ GACL_API extern PGACL_COMPRESSION_CLEANUPROUTINE GACL_Compression_CleanupRoutine
 /// Default compression init routine.
 ///
 /// This function will initialize a zstd compression context that will enforce the following settings
-/// to maintain compression ratios while enabling future hardware-accelerated implementations (i.e., GPU)
-/// of decompression to achieve higher throughput.
+/// to maintain compression ratios while enabling future CPU-offload implementations of decompression
+/// to achieve higher throughput.
 /// 256KB max window size(enforced at the GACL zstd call site)
 /// Strategy >= btopt(to allow for 3 byte matching)
 /// Min match size = 3

@@ -94,14 +94,13 @@ feature in the port's `usage` file.
 
 ## Compressing non-texture data
 
-GACL's hardware decompression path requires a zstd window of at most 256 KB
-(`windowLog` 18). Exceeding it does not corrupt anything — it drops off the
-hardware path and decodes roughly **100x slower**, silently.
+Anticipated future CPU-offload implementations of zstd decompression may require
+a window of at most 256 KB (`windowLog` 18). GACL caps the window accordingly.
 
 Texture data conditioned through `GACL_ShuffleCompress_BCn()` is clamped
 automatically. For **non-texture** data — audio, geometry, anything else that must
-stay on the same hardware path — prefer GACL's own tooling, which applies the
-window for you:
+remain compatible with the same CPU-offload path — prefer GACL's own tooling,
+which applies the window for you:
 
 ```
 gacl.exe <input> --compressraw          # writes <input>.zst
