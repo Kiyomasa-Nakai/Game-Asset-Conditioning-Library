@@ -33,6 +33,7 @@
     <VcpkgHostTriplet>x64-windows</VcpkgHostTriplet>
     <VcpkgUseStatic>true</VcpkgUseStatic>
     <VcpkgUseMD>true</VcpkgUseMD>
+    <GaclVcpkgBuildtreesRoot Condition="'$(GaclVcpkgBuildtreesRoot)' == '' and '$(GITHUB_ACTIONS)' == 'true' and '$(RUNNER_TEMP)' != ''">$(RUNNER_TEMP)\gacl-vcpkg-buildtrees</GaclVcpkgBuildtreesRoot>
     <!-- Pin the toolset vcpkg builds the ports with.
 
          vcpkg picks the NEWEST MSVC toolset installed on the machine unless the

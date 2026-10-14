@@ -14,8 +14,6 @@ jobs:
     name: Build (${{ matrix.configuration }}-${{ matrix.platform }})
     runs-on: windows-latest
     timeout-minutes: 180
-    env:
-      GaclVcpkgBuildtreesRoot: ${{ runner.temp }}\gacl-vcpkg-buildtrees
 
     strategy:
       fail-fast: false
@@ -67,6 +65,10 @@ jobs:
           if (-not (Test-Path $toolchain)) {
             throw "vcpkg toolchain not found at $toolchain"
           }
+          if (-not $env:RUNNER_TEMP) {
+            throw "RUNNER_TEMP is not set"
+          }
+          $consumerInstalled = Join-Path $env:RUNNER_TEMP "gacl-consumer-installed"
 
           cmake -S .\Samples\VcpkgConsumer `
             -B .\Samples\VcpkgConsumer\build `
@@ -75,7 +77,7 @@ jobs:
             -DCMAKE_TOOLCHAIN_FILE="$toolchain" `
             -DVCPKG_OVERLAY_PORTS="${{ github.workspace }}\build\overlays" `
             -DVCPKG_OVERLAY_TRIPLETS="${{ github.workspace }}\build\triplets" `
-            -DVCPKG_INSTALLED_DIR="${{ runner.temp }}\gacl-consumer-installed" `
+            -DVCPKG_INSTALLED_DIR="$consumerInstalled" `
             -DVCPKG_TARGET_TRIPLET=x64-windows-v143-static-md
           if ($LASTEXITCODE -ne 0) { throw "Consumer configure failed" }
 
